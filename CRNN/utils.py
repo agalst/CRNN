@@ -13,8 +13,12 @@ def sparse_tuple_from(sequences, dtype=np.int32):
     values = []
 
     for n, seq in enumerate(sequences):
-        indices.extend(zip([n] * len(seq), [i for i in range(len(seq))]))
-        values.extend(seq)
+        if isinstance(seq, list):
+            indices.extend(zip([n] * len(seq), [i for i in range(len(seq))]))
+            values.extend(seq)
+        else: # Account for a single number in seq
+            indices.extend(zip([n], [i for i in range(1)]))
+            values.extend([seq])
 
     indices = np.asarray(indices, dtype=np.int64)
     values = np.asarray(values, dtype=dtype)
